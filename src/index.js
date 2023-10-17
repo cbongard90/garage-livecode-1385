@@ -11,6 +11,7 @@ const fetchAllCars = () => {
     .then(response => response.json())
     .then((data) => {
       console.log(data); // Array
+      carList.innerHTML = "";
       // We iterate on the array
       data.forEach((car) => {
         // we create a card for EACH cars
@@ -34,3 +35,29 @@ const fetchAllCars = () => {
 
 // call the function
 fetchAllCars();
+
+// get the Submit button
+const submitButton = document.querySelector(".car-form");
+
+console.log(submitButton);
+// Listen to the submit event
+submitButton.addEventListener('submit', (event) => {
+  event.preventDefault();
+  console.log('click click Im here');
+  // we get the information from the inputs
+  console.log(event.currentTarget);
+  const formData = new FormData(event.currentTarget);
+  console.log(formData);
+  const newCar = Object.fromEntries(formData)
+  console.log('car object', newCar);
+  // we post the new car to the data
+  fetch(garageURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(newCar)
+  })
+    .then(() => fetchAllCars())
+    event.currentTarget.reset();
+})
